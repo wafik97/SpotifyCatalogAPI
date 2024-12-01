@@ -4,9 +4,13 @@
 	
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>catalog</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+
+	<properties>
+		<maven.compiler.source>23</maven.compiler.source>
+		<maven.compiler.target>23</maven.compiler.target>
+	</properties>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -14,11 +18,6 @@
 		<version>3.3.5</version>
 		<relativePath/>
 	</parent>
-
-
-	<properties>
-		<java.version>17</java.version>
-	</properties>
 
 	<dependencies>
 		<dependency>
