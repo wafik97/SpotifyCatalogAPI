@@ -1,4 +1,4 @@
-package com.example.catalog;
+package com.example.catalog.utils;
 
 import com.fasterxml.jackson.databind.JsonNode;
 

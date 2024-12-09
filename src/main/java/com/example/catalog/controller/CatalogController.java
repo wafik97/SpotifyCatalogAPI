@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-import com.example.catalog.SpotifyUtils;
+import com.example.catalog.utils.SpotifyUtils;
 
 @RestController
 public class CatalogController {
