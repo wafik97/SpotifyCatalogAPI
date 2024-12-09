@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import java.util.Comparator;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 public class CatalogUtils {
 
@@ -36,51 +37,52 @@ public class CatalogUtils {
      * Checks if a song exists by its title.
      *
      * @param songs List of songs (JsonNode objects).
-     * @param title The title of the song to search for.
+     * @param name The name of the song to search for (ignore case).
      * @return true if the song exists, false otherwise.
      */
-    public boolean doesSongExistByTitle(List<JsonNode> songs, String title) {
+    public boolean doesSongExistByName(List<JsonNode> songs, String name) {
         return songs.stream()
-                .anyMatch(song -> song.get("title").asText().equalsIgnoreCase(title));
+                .anyMatch(song -> song.get("name").asText().equalsIgnoreCase(name));
     }
 
     /**
-     * Counts the number of songs belonging to a specific genre.
+     * Counts the number of songs belonging to a specific artist.
      *
      * @param songs List of songs (JsonNode objects).
-     * @param genre The genre to count songs by.
-     * @return The number of songs in the specified genre.
+     * @param artist The artist to count songs by.
+     * @return The number of songs in the specified artist.
      */
-    public long countSongsByGenre(List<JsonNode> songs, String genre) {
+    public long countSongsByArtist(List<JsonNode> songs, String artist) {
+
         return songs.stream()
-                .filter(song -> song.get("genre").asText().equalsIgnoreCase(genre))
+                .filter(song -> StreamSupport.stream(song.get("artists").spliterator(), false)
+                        .anyMatch(artistNode -> artistNode.get("name").asText().equalsIgnoreCase(artist)))
                 .count();
     }
 
     /**
-     * Returns the song with the longest title.
+     * Returns the longest song.
      *
      * @param songs List of songs (JsonNode objects).
-     * @return The song with the longest title.
+     * @return The longest song.
      */
-    public JsonNode getSongWithLongestTitle(List<JsonNode> songs) {
+    public JsonNode getLongestSong(List<JsonNode> songs) {
         return songs.stream()
-                .max(Comparator.comparingInt(song -> song.get("title").asText().length()))
+                .max(Comparator.comparingInt(song -> song.get("duration_ms").asInt()))
                 .orElse(null);
     }
 
     /**
-     * Finds the song released in the specified year.
+     * Finds a song released in the specified year.
      *
      * @param songs List of songs (JsonNode objects).
      * @param year  The release year to search for.
      * @return The first song released in the specified year.
      */
-    public JsonNode getSongByYear(List<JsonNode> songs, int year) {
+    public List<JsonNode> getSongByYear(List<JsonNode> songs, int year) {
         return songs.stream()
-                .filter(song -> song.get("year").asInt() == year)
-                .findFirst()
-                .orElse(null);
+                .filter(song -> song.get("album").get("release_date").asText().substring(0, 4).equals(String.valueOf(year)))
+                .toList();
     }
 
     /**

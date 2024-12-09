@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
+import com.example.catalog.SpotifyUtils;
+
 @RestController
 public class CatalogController {
 
@@ -28,6 +30,10 @@ public class CatalogController {
 
     @GetMapping("/albums/{id}")
     public JsonNode getAlbumById(@PathVariable String id) throws IOException {
+        if (! SpotifyUtils.isValidId(id)) {
+            return objectMapper.createObjectNode().put("error", "Invalid Id");
+        }
+
         ClassPathResource resource = new ClassPathResource("data/albums.json");
         JsonNode albums = objectMapper.readTree(resource.getFile());
         JsonNode album = albums.get(id);
