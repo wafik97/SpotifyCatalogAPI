@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 public class PracticeController {
@@ -46,19 +49,34 @@ public class PracticeController {
         JsonNode songsNode = objectMapper.readTree(resource.getFile());
         List<Map<String, Object>> songsList = objectMapper.convertValue(songsNode, List.class);
 
-        Map<String, Object> mostP = null;
-        int maxP = -1;
 
-        for (Map<String, Object> song : songsList) {
 
-            Integer popularity = (Integer) song.get("popularity");
-            if (popularity != null && popularity > maxP) {
-                maxP = popularity;
-                mostP = song;
+        int maxPopularity = -1,songIndex=0;
+
+/*
+        for ( String key : songsList. ) {
+            System.out.println( key );
+        }*/
+
+        for(int i=0;i<songsList.size();i++){
+            Integer popularity = (Integer) songsList.get(i).get("popularity");
+            if (popularity != null && popularity > maxPopularity) {
+                maxPopularity = popularity;
+                songIndex = i;
             }
         }
+        /*
+        for (Map<String, Object> song : songsList) {
+            Integer popularity = (Integer) song.get(song.get) .get("popularity");
+            if (popularity != null && popularity > maxPopularity) {
+                maxPopularity = popularity;
+                mostPopularSong = song;
+            }
+        }*/
 
-        return songsList.get(0);  // TODO return the song with the highest popularity
-    }
+        return songsList.get(songIndex);  // TODO return the song with the highest popularity
+    }    // here i have unknown error    http://localhost:8080/mostPopularSongs
+
+    //songsList.get(0);
 
 }
