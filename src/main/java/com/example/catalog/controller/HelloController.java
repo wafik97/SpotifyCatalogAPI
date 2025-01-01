@@ -12,4 +12,9 @@ public class HelloController {
         return "Hello from API! There is no UI here...";
     }
 
+    @GetMapping("/internal")
+    public String home1() {
+        return "internal Hello from API! There is no UI here...";
+    }
+
 }

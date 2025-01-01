@@ -8,10 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 public class PracticeController {
@@ -45,37 +42,21 @@ public class PracticeController {
      */
     @GetMapping("/mostPopularSongs")
     public Map<String, Object> getMostPopularSongs() throws IOException {
+
         ClassPathResource resource = new ClassPathResource("data/popular_songs.json");
+
         JsonNode songsNode = objectMapper.readTree(resource.getFile());
-        List<Map<String, Object>> songsList = objectMapper.convertValue(songsNode, List.class);
+
+        List<Map<String, Object>> songsList =objectMapper.convertValue(songsNode, List.class);
+        Map<String, Object> mostPopularSong = Collections.max(songsList, Comparator.comparing(song ->
+                (Integer) song.get("popularity") ));
+
+
+        return mostPopularSong;
 
 
 
-        int maxPopularity = -1,songIndex=0;
-
-/*
-        for ( String key : songsList. ) {
-            System.out.println( key );
-        }*/
-
-        for(int i=0;i<songsList.size();i++){
-            Integer popularity = (Integer) songsList.get(i).get("popularity");
-            if (popularity != null && popularity > maxPopularity) {
-                maxPopularity = popularity;
-                songIndex = i;
-            }
-        }
-        /*
-        for (Map<String, Object> song : songsList) {
-            Integer popularity = (Integer) song.get(song.get) .get("popularity");
-            if (popularity != null && popularity > maxPopularity) {
-                maxPopularity = popularity;
-                mostPopularSong = song;
-            }
-        }*/
-
-        return songsList.get(songIndex);  // TODO return the song with the highest popularity
-    }    // here i have unknown error    http://localhost:8080/mostPopularSongs
+    }//   http://localhost:8080/mostPopularSongs
 
     //songsList.get(0);
 
