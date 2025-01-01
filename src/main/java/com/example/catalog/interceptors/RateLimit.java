@@ -26,6 +26,23 @@ public class RateLimit implements HandlerInterceptor {
     private boolean rateLimitEnabled;
 
 
+
+    public void setRateLimitEnabled(boolean b) {
+        this.rateLimitEnabled = b;
+    }
+
+    // Setters for testing
+    public void setRateLimitAlgo(String rateLimitAlgo) {
+        this.rateLimitAlgo = rateLimitAlgo;
+    }
+
+    public void setRateLimitRPM(int rateLimitRPM) {
+        this.rateLimitRPM = rateLimitRPM;
+    }
+
+
+
+
     private static final int blockTime = 60000;
 
     private final HashMap<String, Ips> ipMap = new HashMap<>();

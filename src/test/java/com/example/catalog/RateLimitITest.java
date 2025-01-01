@@ -37,6 +37,7 @@ public class RateLimitITest {
         for (int i = 0; i < extraRequests; i++) {
             ResponseEntity<String> response = restTemplate.getForEntity(API_ENDPOINT, String.class);
             assertTrue(response.getStatusCode().equals(HttpStatusCode.valueOf(429)));
+
             int retryAfter = Integer.parseInt(response.getHeaders().get(XRateLimitRetryAfterSecondsHeader).get(0));
             assertTrue(retryAfter > 0);
         }
