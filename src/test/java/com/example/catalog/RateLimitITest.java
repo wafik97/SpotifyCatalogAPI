@@ -30,7 +30,7 @@ public class RateLimitITest {
             assertTrue(response.getStatusCode().equals(HttpStatusCode.valueOf(200)), "Expected status code to be 200 for the first 10 requests");
 
             String remainingRequests = String.valueOf(allowedRequests - (i + 1));
-        //    System.out.println("check remainingRequests: " + remainingRequests);
+            System.out.println("check remainingRequests: " + remainingRequests);
             assertEquals(remainingRequests, response.getHeaders().get(XRateLimitRemaining).get(0), "Expected " + XRateLimitRemaining + " header to be " + remainingRequests + " after " + i + 1 + " requests");
         }
 

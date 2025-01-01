@@ -22,6 +22,9 @@ public class RateLimit implements HandlerInterceptor {
     @Value("${rate-limit.rpm}")
     private int rateLimitRPM;
 
+    @Value("${rate-limit.enabled}")
+    private boolean rateLimitEnabled;
+
 
 
     private final long startingTime = currentTimeMillis();
@@ -33,13 +36,13 @@ public class RateLimit implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-            System.out.println("request is check_for1: "+request);
-            System.out.println("Response is check_for2: " + response);
-            System.out.println("handler is check_for3: " + handler);
+         //   System.out.println("request is check_for1: "+request);
+          //  System.out.println("Response is check_for2: " + response);
+        //    System.out.println("handler is check_for3: " + handler);
 
-        if (request.getRequestURI().startsWith("/internal")) {
+        if (request.getRequestURI().startsWith("/internal")|| !rateLimitEnabled) {
           //  response.setHeader("X-Rate-Limit-Remaining", "10");
-            response.setStatus(200);
+           // response.setStatus(200);
             return true;
         }
 
@@ -60,7 +63,14 @@ public class RateLimit implements HandlerInterceptor {
         return true;
     }
 
-    private boolean isAllowed(String clientIp, HttpServletResponse response) {
+
+
+
+    // to do nested class
+
+
+
+    private synchronized boolean isAllowed(String clientIp, HttpServletResponse response) {
         // TODO your implementation ...
 
         if (rateLimitAlgo.equals("fixed")){
@@ -77,16 +87,13 @@ public class RateLimit implements HandlerInterceptor {
     }
 
 
-    private boolean isAllowedFixed(String clientIp, HttpServletResponse response) {
+    private synchronized boolean isAllowedFixed(String clientIp, HttpServletResponse response) {
         long curr = currentTimeMillis();
 
         if((int)((curr-startingTime)/60000)>lastFix){
             requestCounter = 0;
             lastFix=(int)((curr-startingTime)/60000);
-
-
         }
-
 
         if (requestCounter <rateLimitRPM) {
             requestCounter++;
@@ -101,7 +108,7 @@ public class RateLimit implements HandlerInterceptor {
         }
     }
 
-    private boolean isAllowedMoving(String clientIp, HttpServletResponse response) {
+    private synchronized boolean isAllowedMoving(String clientIp, HttpServletResponse response) {
         list.add(currentTimeMillis());
         int counter=-1;
 
@@ -118,15 +125,10 @@ public class RateLimit implements HandlerInterceptor {
         if(list.size()<rateLimitRPM){
 
             response.setHeader("X-Rate-Limit-Remaining", String.valueOf(rateLimitRPM - list.size()));
-
             return true;
-
         }
         else {
-
-
             return false;
-
         }
 
 
