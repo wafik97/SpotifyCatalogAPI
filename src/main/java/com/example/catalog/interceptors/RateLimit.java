@@ -1,7 +1,6 @@
 package com.example.catalog.interceptors;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -9,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import static java.lang.System.*;
 
@@ -26,12 +26,16 @@ public class RateLimit implements HandlerInterceptor {
     private boolean rateLimitEnabled;
 
 
-
-    private final long startingTime = currentTimeMillis();
-    private int requestCounter = 0;
     private static final int blockTime = 60000;
-    private int lastFix = 0;
-    ArrayList<Long> list = new ArrayList<>();
+
+    private final HashMap<String, Ips> ipMap = new HashMap<>();
+
+
+//    private final long startingTime = currentTimeMillis();
+//    private int requestCounter = 0;
+//
+//    private int lastFix = 0;
+//    ArrayList<Long> list = new ArrayList<>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -50,7 +54,12 @@ public class RateLimit implements HandlerInterceptor {
 
         String clientIp = request.getRemoteAddr();
 
-        if (!isAllowed(clientIp,response)) {
+        if(!ipMap.containsKey(clientIp)){
+            Ips ip=new Ips(clientIp );
+            ipMap.put(clientIp,ip);
+        }
+
+        if (!isAllowed(ipMap.get(clientIp),response)) {
             // TODO your implementation ...
 
             response.setHeader("X-Rate-Limit-Remaining", "0");
@@ -68,9 +77,24 @@ public class RateLimit implements HandlerInterceptor {
 
     // to do nested class
 
+    public static class Ips {
+        private String IP;
+        private long startingTime = currentTimeMillis();
+        private int requestCounter = 0;
+        private int lastFix = 0;
+        ArrayList<Long> list = new ArrayList<>();
 
 
-    private synchronized boolean isAllowed(String clientIp, HttpServletResponse response) {
+        // Constructor
+        public Ips(String ip ) {
+            this.IP = ip;
+            this.startingTime = currentTimeMillis();;
+
+        }
+    }
+
+
+    private synchronized boolean isAllowed(Ips clientIp, HttpServletResponse response) {
         // TODO your implementation ...
 
         if (rateLimitAlgo.equals("fixed")){
@@ -87,17 +111,17 @@ public class RateLimit implements HandlerInterceptor {
     }
 
 
-    private synchronized boolean isAllowedFixed(String clientIp, HttpServletResponse response) {
+    private synchronized boolean isAllowedFixed(Ips clientIp, HttpServletResponse response) {
         long curr = currentTimeMillis();
 
-        if((int)((curr-startingTime)/60000)>lastFix){
-            requestCounter = 0;
-            lastFix=(int)((curr-startingTime)/60000);
+        if((int)((curr- clientIp.startingTime )/60000)>clientIp.lastFix){
+            clientIp.requestCounter = 0;
+            clientIp.lastFix=(int)((curr-clientIp.startingTime)/60000);
         }
 
-        if (requestCounter <rateLimitRPM) {
-            requestCounter++;
-            response.setHeader("X-Rate-Limit-Remaining", String.valueOf(rateLimitRPM - requestCounter));
+        if (clientIp.requestCounter <rateLimitRPM) {
+            clientIp.requestCounter++;
+            response.setHeader("X-Rate-Limit-Remaining", String.valueOf(rateLimitRPM - clientIp.requestCounter));
 
             return true;
         }
@@ -108,23 +132,23 @@ public class RateLimit implements HandlerInterceptor {
         }
     }
 
-    private synchronized boolean isAllowedMoving(String clientIp, HttpServletResponse response) {
-        list.add(currentTimeMillis());
+    private synchronized boolean isAllowedMoving(Ips clientIp, HttpServletResponse response) {
+        clientIp.list.add(currentTimeMillis());
         int counter=-1;
 
-        for(long i:list){
-            if(list.get(list.size()-1)-i>60000){
+        for(long i:clientIp.list){
+            if(clientIp.list.get(clientIp.list.size()-1)-i>60000){
                 counter++;
 
             }
         }
         if (counter >= 0) {
-            list.subList(0, counter + 1).clear();
+            clientIp.list.subList(0, counter + 1).clear();
         }
 
-        if(list.size()<rateLimitRPM){
+        if(clientIp.list.size()<rateLimitRPM){
 
-            response.setHeader("X-Rate-Limit-Remaining", String.valueOf(rateLimitRPM - list.size()));
+            response.setHeader("X-Rate-Limit-Remaining", String.valueOf(rateLimitRPM - clientIp.list.size()));
             return true;
         }
         else {
