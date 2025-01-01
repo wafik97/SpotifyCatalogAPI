@@ -71,7 +71,7 @@ class RateLimitInterceptorTest {
             rateLimit.preHandle(request, response, null);
         }
 
-        Thread.sleep(60000); // Wait for window reset
+        Thread.sleep(60000);
 
         boolean isAllowed = rateLimit.preHandle(request, response, null);
         assertTrue(isAllowed, "Requests should be allowed after reset");
@@ -88,7 +88,7 @@ class RateLimitInterceptorTest {
             rateLimit.preHandle(request, response, null);
         }
 
-        rateLimit.preHandle(request, response, null); // Exceed limit
+        rateLimit.preHandle(request, response, null);
 
         String retryAfter = response.getHeader("X-Rate-Limit-Retry-After-Seconds");
         assertNotNull(retryAfter, "Retry-After header should be set");
@@ -115,7 +115,7 @@ class RateLimitInterceptorTest {
             rateLimit.preHandle(request, response, null);
         }
 
-        Thread.sleep(60000); // Wait for window reset
+        Thread.sleep(60000);
 
         boolean isAllowed = rateLimit.preHandle(request, response, null);
         assertTrue(isAllowed, "Requests should be allowed after sliding window reset");
