@@ -27,38 +27,38 @@ public class ArtistController {
     @GetMapping("/{id}")
     public ResponseEntity<Artist> getArtistById(@PathVariable String id) throws IOException {
         if (!isValidId(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);  // 400 Bad Request if ID is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
         Artist artist = dataSourceService.getArtistById(id);
         if (artist == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 404 Not Found if artist does not exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        return ResponseEntity.ok(artist);  // 200 OK if artist is found
+        return ResponseEntity.ok(artist);
     }
 
     @GetMapping
     public ResponseEntity<List<Artist>> getAllArtists() throws IOException {
         List<Artist> artists = dataSourceService.getAllArtists();
         if (artists == null || artists.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);  // 404 Not Found if no artists are found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
 
-        return ResponseEntity.ok(artists);  // 200 OK if artists are found
+        return ResponseEntity.ok(artists);
     }
 
     @PostMapping
     public ResponseEntity<Void> addArtist(@RequestBody Artist artist) {
         try {
             if (artist == null || artist.getName() == null || artist.getName().isEmpty()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if artist data is invalid
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
             dataSourceService.addArtist(artist);
-            return ResponseEntity.status(HttpStatus.CREATED).build();  // 201 Created if artist is added
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -66,18 +66,18 @@ public class ArtistController {
     public ResponseEntity<Void> updateArtist(@PathVariable String id, @RequestBody Artist artist) {
         try {
             if (!isValidId(id)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if ID is invalid
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
             Artist existingArtist = dataSourceService.getArtistById(id);
             if (existingArtist == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found if artist does not exist
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
             dataSourceService.updateArtist(id, artist);
-            return ResponseEntity.status(HttpStatus.OK).build();  // 200 OK if artist is updated
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -85,48 +85,48 @@ public class ArtistController {
     public ResponseEntity<Void> deleteArtist(@PathVariable String id) {
         try {
             if (!isValidId(id)) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if ID is invalid
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
             }
 
             Artist artist = dataSourceService.getArtistById(id);
             if (artist == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found if artist does not exist
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
 
             dataSourceService.deleteArtist(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 204 No Content if artist is deleted
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @GetMapping("/{id}/albums")
     public ResponseEntity<List<Album>> getAlbumsByArtist(@PathVariable String id) throws IOException {
         if (!isValidId(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if ID is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         List<Album> albums = dataSourceService.getAlbumsByArtist(id);
         if (albums.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found if no albums are found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(albums); // 200 OK if albums are found
+        return ResponseEntity.ok(albums);
     }
 
     @GetMapping("/{id}/songs")
     public ResponseEntity<List<Song>> getSongsByArtist(@PathVariable String id) throws IOException {
         if (!isValidId(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if ID is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         List<Song> songs = dataSourceService.getSongsByArtist(id);
         if (songs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 404 Not Found if no songs are found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(songs); // 200 OK if songs are found
+        return ResponseEntity.ok(songs);
     }
 
     private boolean isValidId(String id) {
-        return id != null && !id.isEmpty();  // You can add additional ID validation logic here
+        return id != null && !id.isEmpty();
     }
 }

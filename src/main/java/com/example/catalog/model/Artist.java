@@ -1,15 +1,29 @@
 package com.example.catalog.model;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
+import java.util.List;
+import java.util.Map;
+
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Artist {
     private String id;
     private String name;
+
+    @JsonProperty("followers")
+    @JsonDeserialize(using = Followers.class)
     private int followers;
     private List<String> genres;
     private List<Image> images;
     private int popularity;
     private String uri;
+
+    @JsonProperty("external_urls")
+    private Map<String, String> externalUrls;
+
 
     public Artist(String id, String name, int followers, List<String> genres, int popularity, String uri) {
         this.id = id;

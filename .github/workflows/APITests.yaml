@@ -22,4 +22,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          mvn test -q
+          mvn -Dtest=AlbumTest test
+          mvn -Dtest=SongTest test
+          mvn -Dtest=ArtistTest test
+

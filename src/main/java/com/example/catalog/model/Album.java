@@ -1,10 +1,13 @@
 package com.example.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Album {
     private String id;
     private String name;
@@ -15,7 +18,10 @@ public class Album {
 
     @JsonProperty("total_tracks")
     private int totalTracks;
+
     private List<Image> images;
+    @JsonProperty("tracks")
+    @JsonDeserialize(using = Tracks.class)
     private List<Track> tracks;
     private List<Artist> artists;
 
@@ -31,18 +37,6 @@ public class Album {
         this.artists = artists;
     }
 
-   /* public Album(String id, String name, List<Track> tracks) {
-        this.id = id;
-        this.name = name;
-        this.tracks = tracks;
-        this.uri = "";
-        this.releaseDate = "";
-        this.totalTracks = (tracks != null) ? tracks.size() : 0;
-        this.images = null;
-        this.artists = null;
-    }*/
-
-
     @JsonCreator
     public Album(
             @JsonProperty("id") String id,
@@ -56,6 +50,9 @@ public class Album {
         this.totalTracks = (tracks != null) ? tracks.size() : 0;
         this.images = null;
         this.artists = null;
+    }
+
+    public Album() {
     }
 
     // Getters and Setters
@@ -113,6 +110,7 @@ public class Album {
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
+        this.totalTracks = (tracks != null) ? tracks.size() : 0;
     }
 
     public List<Artist> getArtists() {

@@ -1,8 +1,11 @@
 package com.example.catalog.model;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Track {
     private String id;
     private String name;
@@ -28,6 +31,10 @@ public class Track {
         this.explicit = false;
         this.uri = "";
         this.durationMs = 0;
+    }
+
+    public Track() {
+
     }
 
 

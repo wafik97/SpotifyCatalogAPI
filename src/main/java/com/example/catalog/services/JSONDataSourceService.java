@@ -475,20 +475,16 @@ public class JSONDataSourceService implements DataSourceService {
     public List<Album> getAlbumsByArtist(String artistId) throws IOException {
         JsonNode songsNode = loadJsonData("test-data/popular_songs.json");
         List<Album> albums = new ArrayList<>();
-
-        // Iterate through every song
         for (JsonNode song : songsNode) {
-            // Check each artist inside the song
             for (JsonNode artist : song.get("artists")) {
                 if (artist.has("id") && artist.get("id").asText().equals(artistId)) {
-                    // Convert the album JsonNode to an Album object and add it to the list
                     Album album = objectMapper.treeToValue(song.get("album"), Album.class);
                     albums.add(album);
                     break;
                 }
             }
         }
-        return albums; // Return list of albums for the artist
+        return albums;
     }
 
 
@@ -500,19 +496,16 @@ public class JSONDataSourceService implements DataSourceService {
     public List<Song> getSongsByArtist(String artistId) throws IOException {
         JsonNode songsNode = loadJsonData("test-data/popular_songs.json");
         List<Song> songs = new ArrayList<>();
-
-        // Iterate through every song
         for (JsonNode song : songsNode) {
-            // Check each artist inside the song
             for (JsonNode artist : song.get("artists")) {
                 if (artist.has("id") && artist.get("id").asText().equals(artistId)) {
-                    // Convert JsonNode to Song object and add it to the list
+
                     songs.add(objectMapper.treeToValue(song, Song.class));
                     break;
                 }
             }
         }
-        return songs; // Return list of songs for the artist
+        return songs;
     }
 
 

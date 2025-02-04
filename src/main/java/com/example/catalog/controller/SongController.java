@@ -25,80 +25,80 @@ public class SongController {
     public ResponseEntity<List<Song>> getAllSongs() throws IOException {
         List<Song> songs = dataSourceService.getAllSongs();
         if (songs == null || songs.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found if no songs are found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(songs);  // 200 OK if songs are found
+        return ResponseEntity.ok(songs);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Song> getSongById(@PathVariable String id) throws IOException {
         if (!isValidId(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if ID is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Song song = dataSourceService.getSongById(id);
         if (song == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found if song does not exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        return ResponseEntity.ok(song);  // 200 OK if song is found
+        return ResponseEntity.ok(song);
     }
 
     @PostMapping
     public ResponseEntity<Void> addSong(@RequestBody Song song) throws IOException {
         if (song == null || song.getName() == null || song.getName().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if song data is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         try {
             dataSourceService.addSong(song);
-            return ResponseEntity.status(HttpStatus.CREATED).build();  // 201 Created if song is added
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateSong(@PathVariable String id, @RequestBody Song updatedSong) throws IOException {
         if (!isValidId(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if ID is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Song existingSong = dataSourceService.getSongById(id);
         if (existingSong == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found if song does not exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         try {
             dataSourceService.updateSong(id, updatedSong);
-            return ResponseEntity.status(HttpStatus.OK).build();  // 200 OK if song is updated
+            return ResponseEntity.status(HttpStatus.OK).build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteSong(@PathVariable String id) throws IOException {
         if (!isValidId(id)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();  // 400 Bad Request if ID is invalid
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
         Song song = dataSourceService.getSongById(id);
         if (song == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();  // 404 Not Found if song does not exist
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
         try {
             dataSourceService.deleteSong(id);
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();  // 204 No Content if song is deleted
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();  // 500 Internal Server Error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    // Helper method for ID validation
+
     private boolean isValidId(String id) {
-        return id != null && !id.isEmpty();  // You can add additional ID validation logic here if necessary
+        return id != null && !id.isEmpty();
     }
 }
