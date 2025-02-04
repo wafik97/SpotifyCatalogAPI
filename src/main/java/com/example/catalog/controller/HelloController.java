@@ -9,13 +9,11 @@ public class HelloController {
 
     @GetMapping("/")
     public String home() {
-        return "Hello from API! There is no UI here...";
-    }
+        return "Hello from API! There is no UI here...";}
 
     @GetMapping("/internal")
     public String home1() {
-        return "internal Hello from API! There is no UI here...";
-    }
+        return "internal Hello from API! There is no UI here...";}
 
 }
 
