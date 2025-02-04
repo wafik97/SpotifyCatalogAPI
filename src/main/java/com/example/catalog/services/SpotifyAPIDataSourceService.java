@@ -23,7 +23,7 @@ public class SpotifyAPIDataSourceService implements DataSourceService {
 
     private static final String SPOTIFY_API_BASE_URL = "https://api.spotify.com/v1/";
 
-    private final String accessToken = "BQBkc8dprXPRWXD2UE_6Ct1iE1ffLAJGCZ_c7zj9gIturKQWVtS1-Wvi5frHdR3bBjvGiNHfxxNyjBWuQ2zR1AHd8896_nQRmPemwC3ELgvjszwoiL0tbhp90xnvN89m2cJZQ0mSs50";
+    private final String accessToken = "BQD_Qt_--2sDtp3TD0vQRTR6r_Xpvnop8mCpuohlfucztyX1mVPAk3-gEffdcCnm08c6gAQmNu7q9pI3Qm3aukcTo3L73TIllGIY0EYnvR_2wbyxcfZmFgRFW5LPZWcPGqLYpawCl3g";
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;

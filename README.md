@@ -48,3 +48,5 @@ You can choose which data source to use for running tests via GitHub Actions.
 
 1. Set `datasource.type=spotify_api` in your `application.properties`.
 2. Run the test: `SpotifyAPIServiceTest`.
+
+### Dont forget to update to valid token !!!
