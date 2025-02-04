@@ -1,15 +1,26 @@
 name: SpotifyCatalogAPI tests project
 
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+    inputs:
+      datasource_type:
+        description: 'Select the datasource type'
+        required: true
+        type: choice
+        options:
+          - json
+          - spotify_api
 
 jobs:
   Test:
     name: Execute Unittests
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -20,9 +31,12 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      - name: Run Unit Tests
+      - name: Run Unit Tests with datasource=${{ github.event.inputs.datasource_type }}
         run: |
-          mvn -Dtest=AlbumTest test
-          mvn -Dtest=SongTest test
-          mvn -Dtest=ArtistTest test
-
+          if [ "${{ github.event.inputs.datasource_type }}" == "json" ]; then
+            mvn test -q -Dtest=AlbumTest -Ddatasource.type=json
+            mvn test -q -Dtest=SongTest -Ddatasource.type=json
+            mvn test -q -Dtest=ArtistTest -Ddatasource.type=json
+          elif [ "${{ github.event.inputs.datasource_type }}" == "spotify_api" ]; then
+            mvn test -q -Dtest=SpotifyAPIServiceTest -Ddatasource.type=spotify_api
+          fi
