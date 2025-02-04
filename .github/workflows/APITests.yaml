@@ -1,9 +1,10 @@
-name: SpotifyCatalogAPI tests
+name: SpotifyCatalogAPI tests project
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   Test:
@@ -21,4 +22,4 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          mvn test -q 
+          mvn test -q
