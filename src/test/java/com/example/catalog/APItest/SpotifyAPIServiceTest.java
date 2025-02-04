@@ -38,7 +38,7 @@ class SpotifyAPIServiceTest {
     private final String sampleArtistId = "0TnOYISbd1XYRBk9myaseg";
     private final String sampleArtistJson = "{ \"id\": \"0TnOYISbd1XYRBk9myaseg\", \"name\": \"Pitbull\" }";
 
-    private final String sampleAlbumId = "4aawyAB9vmqN3uQ7FjRGTy";
+    private final String sampleAlbumId = "wyAB9vmqN3uQ7FjRGTy";
     private final String sampleAlbumJson = "{ \"id\": \"4aawyAB9vmqN3uQ7FjRGTy\", \"name\": \"After Hours\" }";
 
     private final String sampleSongId = "11dFghVXANMlKmJXsNCbNl";
