@@ -3,8 +3,6 @@ package com.example.catalog.APItest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.catalog.model.Artist;
-import com.example.catalog.model.Song;
-import com.example.catalog.model.Album;
 import com.example.catalog.services.JSONDataSourceService;
 import org.junit.jupiter.api.Test;
 
@@ -12,7 +10,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-public class artistTest {
+public class ArtistTest {
 
     @Test
     public void testGetAllArtists() throws IOException {
